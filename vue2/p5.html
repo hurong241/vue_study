@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo:p5-p6</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+<!-- 准备好一个容器：模板-->
+<div id="demo">
+    <h5>
+        my name is {{name.toUpperCase()}},<br/>
+        website:{{website}}<br/>
+        age:{{20+21}}<br/>
+        现在时间:{{Date.now()}}<br/>
+    </h5>
+</div>
+<script type="text/javascript">
+    //创建vue实例
+    const x = new Vue({
+        el: '#demo',//用于指定为哪个容器服务，如果用class选择器不能同时接管多个相同的，只会接管第一个
+        data: {//数据
+            name: 'hurong',
+            website: 'http://www.hu-rong.com',
+        }
+    });
+
+</script>
+</body>
+</html>
