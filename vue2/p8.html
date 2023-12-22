@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p8:数据绑定</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+<!-- 准备好一个容器：模板-->
+<div id="demo">
+    <h5>
+        单向绑定,修改input中的值不影响data数据:<input type="text" name v-bind:value="name">
+        <!--v-model中能用在表单元素中-->
+        双向绑定,修改input中的值影响data数据:<input type="text" name v-model:value="name">
+        双向绑定,v-model:value可以简写为v-model:<input type="text" name v-model="name">
+        <!--这种用法是错误的-->
+<!--        <h1 v-model:x="name">这是错误的用法</h1>-->
+    </h5>
+</div>
+<script type="text/javascript">
+    //创建vue实例
+    const x = new Vue({
+        el: '#demo',//用于指定为哪个容器服务，如果用class选择器不能同时接管多个相同的，只会接管第一个
+        data: {//数据
+            name: 'hurong',
+        }
+    });
+
+</script>
+</body>
+</html>
