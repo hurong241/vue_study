@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p11:数据代理-Object.defineProperty</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+<!-- 准备好一个容器：模板-->
+
+<script type="text/javascript">
+    let number = 20;
+    let person = {//数据
+        name: 'hurong',
+    }
+    //创建vue实例
+    const vm = new Vue({
+        data: person
+    });
+
+    //增加一个age属性,需在控制台测试
+    Object.defineProperty(person, 'age', {
+        // value: number,
+        // enumerable: true,//是否可枚举，默认false
+        // writable: true,//是否可修改,默认false
+        // configurable: true,//是否可删除,默认false
+        //以上不能和get(),set()同时开启
+
+        get() {
+            console.log('有人读取了age')
+            return number
+        },
+        set(value) {
+            console.log('有人设置了age')
+            number = value;
+        }
+    })
+
+
+</script>
+</body>
+</html>
