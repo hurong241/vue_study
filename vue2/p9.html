@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p9:el与data的两种写法</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+<!-- 准备好一个容器：模板-->
+<div id="demo">
+    <h5>
+        你好，{{name}}
+    </h5>
+</div>
+<script type="text/javascript">
+    //创建vue实例
+    const x = new Vue({
+        //el: '#demo',//这种不灵活
+        // data: {//数据
+        //     name: 'hurong',
+        // }
+        //data也可以用这种写法
+        // data(){
+        //     console.log(this)//这个this是vue对象
+        //     return {
+        //         name:'hurong'
+        //     }
+        // }
+        data:()=>{
+            console.log(this)//这个this是全局的window对象
+            return {
+                name:'hurong'
+            }
+        }
+    });
+    //这种比较灵活:2秒后挂载
+    setTimeout(() => {
+        x.$mount("#demo")
+    }, 2000)
+</script>
+</body>
+</html>
