@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p19:计算属性</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+
+<div id="demo">
+    <p>姓:<input type="text" v-model:value="firstName"></p>
+    <p>名:<input type="text" v-model:value="lastName"></p>
+    <p>全名-methods方式1:{{fullName1()}}</p>
+    <p>全名-methods方式2:{{fullName1()}}</p>
+    <p>全名-计算属性1:<input type="text" v-model:value="fullName"></p>
+    <p>全名-计算属性2-这次不会调用fullName的get():<input type="text" v-model:value="fullName"></p>
+</div>
+<script type="text/javascript">
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            firstName: '张',
+            lastName: '三'
+        },
+        methods: {
+            //每次都会计算
+            fullName1() {
+                alert('methods:fullName1()被调用');
+                return this.firstName + this.lastName;
+            }
+        },
+        //computed中定义计算属性，计算属性会有缓存，模板中多次调用get时只会计算一次，效果更高，如果用methods则每次都会调用
+        computed: {
+            //完整模式
+            fullName: {
+                //有缓存，只计算一次
+                get() {
+                    alert('computed:fullName:get()被调用');
+                    return this.firstName + this.lastName;
+                },
+                set(value) {
+                    var first = value.slice(0, 1)
+                    var last = value.slice(1)
+                    this.firstName = first;
+                    this.lastName = last;
+                }
+            }
+            //简写形式
+            // fullName: function () {
+            //     return this.firstName + this.lastName;
+            // }
+        }
+    })
+</script>
+</body>
+</html>
