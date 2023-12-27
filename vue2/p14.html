@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p14:vm事件及事件修饰符</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+<!--修饰符，后面三种不常用-->
+<!--
+prevent:阻止默认事件
+stop:阻止冒泡，冒泡是从内层到外层,可以同时定义多个如click.stop.prevent
+once:事件只触发一次
+capture:使用事件捕获模式，捕获是先从外层开始到内层，如果想先由外层触发事件则可以在外层事件上加上这个修饰符
+self:只有event.target是当前操作的元素时才触发事件，类似于阻止冒泡
+passive:事件的默认行为立即执行，无需等待事件回调执行完成,
+        如：滚动鼠标滑轮时@wheel事件，执行的回调要好久，可能导致页面滚动效果卡顿，如果加了此修饰符，则先响应页面再处理回调
+        不是所有事件都有这个问题存在，如scroll事件就不存在这个问题
+-->
+<!--
+按键别名
+回车:enter，也可以用键码，enter对应13,keyup.enter==keyup.13(不推荐数字这种，有些标准中移除了)
+删除:delete
+退出:esc
+空格:space
+换行:tab,注意，tab键会失去焦点，要用keydown,keyup不会触发事件
+上:up
+下:down
+左:left
+右:right
+未提供别名的，用原始的key值去绑定，但要转为kebab-case,如大小写键CapsLock要写成caps-lock
+ctrl,alt.shift,meta如果用keyup,则是组合键抬起时触发，如ctrl+s,当s抬起时才触发,如果用keydown则和组合键没关系
+                    也可以指定组合键，如：@keyup.ctrl.y="pressKey"
+-->
+<!-- 准备好一个容器：模板-->
+<div id="demo">
+    <button v-on:click="fun1">不传参数事件</button>
+    <!--简写-->
+    <!--    <button @click="fun1">不传参数事件</button>-->
+    <button @click="fun2($event,30)">传参数id=30</button>
+    <br/>
+    <a href="http://www.hu-rong.com" @click="fun3">点击会跳转</a><br/>
+    <!--在methods中定义-->
+    <a href="http://www.hu-rong.com" @click="fun4">点击不会跳转1</a><br/>
+    <!--直接定义修饰符-->
+    <a href="http://www.hu-rong.com" @click.prevent="fun5">点击不会跳转2</a><br/>
+    <!--不阻止冒泡-->
+    <div @click="outer" style="border: 1px solid red;padding:20px;margin-bottom: 20px;">
+        我是外层
+        <div @click="inner" style="border: 1px solid blue;">我是内层-不阻止冒泡-先内后外</div>
+    </div>
+    <!--阻止冒泡-->
+    <div @click="outer" style="border: 1px solid red;padding:20px;margin-bottom: 20px;">
+        我是外层
+        <div @click.stop="inner" style="border: 1px solid blue;">stop:我是内层-阻止冒泡</div>
+    </div>
+    <!--只会触发一次-->
+    <div @click="outer" style="border: 1px solid red;padding:20px;margin-bottom: 20px;">
+        我是外层
+        <div @click.once="inner" style="border: 1px solid blue;">once:我是内层-内层只触发一次</div>
+    </div>
+    <!--先从外层触发，和冒泡相反-->
+    <div @click.capture="outer" style="border: 1px solid red;padding:20px;margin-bottom: 20px;">
+        capture:我是外层
+        <div @click.stop="inner" style="border: 1px solid blue;">我是内层-先外后内</div>
+    </div>
+    <!--键盘事件-->
+    <p><input type="text" value="" @keyup.enter="pressKey">键盘事件:回车键弹起触发</p>
+    <p><input type="text" value="" @keyup.ctrl.y="pressKey">键盘事件:ctrl+y触发</p>
+</div>
+<script type="text/javascript">
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {},
+        methods: {
+            fun1(event) {
+                alert(event.target.innerText)
+            },
+            fun2(event, id) {
+                alert(id);
+            },
+            fun3(event) {
+                alert(event.target.innerText);
+            },
+            fun4(event) {
+                //阻止默认事件
+                event.preventDefault();
+                alert(event.target.innerText);
+            },
+            fun5(event) {
+                alert(event.target.innerText);
+            },
+            outer(event) {
+                //alert(event.target.innerText);
+                console.log('outer');
+                alert('触发外层事件')
+            },
+            inner(event) {
+                //alert(event.target.innerText)
+                console.log('inner');
+                alert('触发内层事件')
+            },
+            pressKey(e) {
+                console.log(e.key, e.keyCode);
+                if (e.keyCode != 13) return;
+                alert('按了回车键')
+            }
+        }
+    })
+</script>
+</body>
+</html>
