@@ -37,6 +37,20 @@
         }
     })
 
+    //数据代理：一个对像去读写另一个对像的值,效果类似于指针
+    let person2 = {
+        name: 'tom'
+    }
+    Object.defineProperty(person2, 'name', {
+        get() {
+            return person.name;
+        },
+        set(value) {
+            person.name = value;
+        }
+    })
+
+    //data数据存储于vm._data中 vm._data===data,修改_data中的数据相当于修改data(指针效果),页面效果也会变
 
 </script>
 </body>
