@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p28-32:vue列表渲染/过滤/排序综合实例</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+
+
+<div id="demo">
+    <!--index为数组或对像的索引.但是添加数据的时候可能导致数据错乱:key一般要用数据的唯一标识，如数据库的id-->
+    <div>
+        <input type="text" v-model="keyword" placeholder="计算属性实现过滤查询">
+        <button @click="sortType=2">年龄升序</button>
+        <button @click="sortType=1">年龄降序</button>
+        <button @click="sortType=0">年龄原序</button>
+        <dl>
+            <dt>遍历数组 in方式 computedFilterPersons,它是通过计算属性过滤后的数据</dt>
+            <dd v-for="(person,index) in computedFilterPersons" :key="person.id">
+                {{index}}:{{person.id}}--{{person.name}}-{{person.age}}
+                <input type="text">
+            </dd>
+        </dl>
+    </div>
+    <hr/>
+    <div>
+        <input type="text" v-model="keyword" placeholder="监视实现过滤查询">
+        <dl>
+            <dt>遍历数组 in方式 filterPersons,它是过滤后的数据</dt>
+            <dd v-for="(person,index) in filterPersons" :key="person.id">
+                {{index}}:{{person.id}}--{{person.name}}-{{person.age}}
+                <input type="text">
+            </dd>
+        </dl>
+    </div>
+    <hr/>
+    <div>
+        <dl>
+            <dt>遍历数组 in方式 persons</dt>
+            <dd v-for="(person,index) in persons" :key="person.id">
+                {{index}}:{{person.id}}--{{person.name}}-{{person.age}}
+                <input type="text">
+            </dd>
+        </dl>
+        <button @click.once="addPerson">添加一个李四</button>
+    </div>
+    <hr/>
+    <dl>
+        <dt>遍历数组 of 方式</dt>
+        <dd v-for="(person,index) of persons" :key="person.id">
+            <p>{{index}}:{{person.id}}--{{person.name}}-{{person.age}}</p>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>遍历对象</dt>
+        <dd v-for="(value,key) of man" :key="key">
+            <p>{{key}}:{{value}}--{{key}}</p>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>遍历字符串</dt>
+        <dd v-for="(value,key) of str" :key="key">
+            <p>{{key}}:{{value}}--{{key}}</p>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>遍历指定次数</dt>
+        <dd v-for="(value,key) of 5" :key="key">
+            <p>{{key}}:{{value}}--{{key}}</p>
+        </dd>
+    </dl>
+
+</div>
+<script type="text/javascript">
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            keyword: '',//过滤查询关键词
+            sortType: 0,//排序：1降序，0原序，2升序
+            //数组
+            persons: [
+                {
+                    'id': '001',
+                    'name': '张三',
+                    'age': '20'
+                },
+                {
+                    'id': '002',
+                    'name': '刘秀',
+                    'age': '35'
+                }
+            ],
+            //用于查询过滤的数据
+            filterPersons: [],
+            //对象
+            man: {
+                name: '李四',
+                'age': 20,
+            },
+            //对符串
+            str: 'hello'
+        },
+        methods: {
+            addPerson() {
+                const p = {
+                    'id': '003',
+                    'name': '李四',
+                    'age': '18'
+                }
+                this.persons.unshift(p)
+                this.filterPersons = this.persons
+            }
+        },
+        //computed中定义计算属性，计算属性会有缓存，模板中多次调用get时只会计算一次，效果更高，如果用methods则每次都会调用
+        computed: {
+            computedFilterPersons() {
+                //这个是查询过滤后的数据
+                const searchResult = this.persons.filter((p) => {
+                    return p.name.indexOf(this.keyword) !== -1;
+                })
+                //对查询过后数据排序
+                if (this.sortType) {
+                    /**
+                     * arrayObject.sort(sortby)；参数sortby可选。规定排序顺序。必须是函数；
+                     注意：如果调用该方法时没有使用参数，将按字母顺序对数组中的元素进行排序，说得更精确点，是按照字符编码的顺序进行排序。要实现这一点，首先应把数组的元素都转换成字符串（如有必要），以便进行比较
+                     如果想按照其他标准进行排序，就需要提供比较函数，该函数要比较两个值，然后返回一个用于说明这两个值的相对顺序的数字。比较函数应该具有两个参数 a 和 b（a代表当前比较数的下一个比较数，b代表当前比较数）：
+                     比较函数应该具有两个参数 a 和 b，其返回值如下：
+                     若 a 小于 b，即 a - b 小于零，则返回一个小于零的值，数组将按照升序排列。
+                     若 a 等于 b，则返回 0。
+                     若 a 大于 b, 即 a - b 大于零，则返回一个大于零的值，数组将按照降序排列。
+                     */
+                    searchResult.sort((a, b) => {
+                        return this.sortType === 1 ? b.age - a.age : a.age - b.age;
+                    })
+                }
+                return searchResult;
+            }
+        },
+        watch: {
+            //过滤查询,这样写首页进入页面的时候由于filterPersons为空,页面上是没有显示的
+            // keyword(newValue, oldValue) {
+            //     console.log('输入查询词发生变化');
+            //     //filter过滤不影响原数据，返回的是一个新的数组,所以不能赋值给persons,不然原数据会破坏
+            //     this.filterPersons = this.persons.filter((p) => {
+            //         //只返回name中包含keyword的数据
+            //         return p.name.indexOf(newValue) !== -1
+            //     })
+            // }
+            keyword: {
+                immediate: true,//加了这个后首页加载的时候就会运行一次，页面上就有数据了
+                handler(newValue) {
+                    this.filterPersons = this.persons.filter((p) => {
+                        return p.name.indexOf(newValue) !== -1
+                    })
+                }
+            }
+        },
+    })
+
+</script>
+</body>
+</html>
