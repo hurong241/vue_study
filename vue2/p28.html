@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p28:条件渲染</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+
+
+<div id="demo">
+    <!--性能上来讲，如果数据不经常变化用v-show比较好，v-if会反复渲染，但实时性更高-->
+    <div v-show="false">节点还在只是不显示了，相当于display:none</div>
+    <div v-if="i===1">如果条件不成立不显示，且节点也不存在</div>
+    <button @click="incr">i++</button>
+    <p v-if="i===1">1</p>
+    <p v-else-if="i===2">2</p>
+    <p v-else>其它</p>
+
+    <template v-if="i==4">
+        i==4时可以看到,template只能用v-if不能用v-show
+    </template>
+
+</div>
+<script type="text/javascript">
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            i: 0,
+        },
+        methods: {
+            incr() {
+                this.i = this.i+1
+                console.log(this.i)
+            }
+        },
+        //computed中定义计算属性，计算属性会有缓存，模板中多次调用get时只会计算一次，效果更高，如果用methods则每次都会调用
+        computed: {},
+        watch: {},
+    })
+
+</script>
+</body>
+</html>
