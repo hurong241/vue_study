@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p22:监视属性</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+
+<div id="demo">
+    <p>今天真{{info}}呀</p>
+    <button @click="changeWeather">改变天气</button>
+    <hr/>
+    <p>a的值为:{{numbers.a}}</p>
+    <button @click="numbers.a++">a++</button>
+    <hr/>
+    <p>b的值为:{{numbers.b}}</p>
+    <button @click="numbers.b++">b++</button>
+</div>
+<script type="text/javascript">
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            isHot: true,
+            numbers: {
+                'a': 1,
+                'b': 2
+            }
+        },
+        methods: {
+            changeWeather() {
+                this.isHot = !this.isHot;
+            }
+        },
+        //computed中定义计算属性，计算属性会有缓存，模板中多次调用get时只会计算一次，效果更高，如果用methods则每次都会调用
+        computed: {
+            info() {
+                return this.isHot ? '热' : '冷'
+            }
+        },
+        watch: {
+            // isHot: {
+            //     //immediate:true,//初始化时让handler调用一下,默认为false
+            //     handler(newValue, oldValue) {
+            //         console.log('isHot被修改', newValue, oldValue)
+            //     }
+            // },
+            //简写
+            isHot(newValue, oldValue) {//watch中能开启异步任务，computed中却不能
+                setTimeout(() => {
+                    console.log('isHot被修改', newValue, oldValue)
+                }, 1000)
+            },
+            //监视一个属性
+            // 'numbers.a': {
+            //     handler(newValue, oldValue) {
+            //         console.log('a被修改了')
+            //     }
+            // }
+            //监视多级结构中所有属性的变化
+            'numbers': {
+                deep: true,//默认为false,监视对像内部值的变化
+                handler() {
+                    console.log('numbers中的数据发生变化');
+                }
+            }
+        },
+    })
+    //watch也可以这样写,这样可以配置immediate,deep
+    // vm.$watch('isHot',{
+    //     //immediate:true,//初始化时让handler调用一下,默认为false
+    //     handler(newValue, oldValue) {
+    //         console.log('isHot被修改', newValue, oldValue)
+    //     }
+    // })
+    //简写
+    // vm.$watch('isHot', function (newValue, oldValue) {
+    //     console.log('isHot被修改', newValue, oldValue)
+    // })
+</script>
+</body>
+</html>
