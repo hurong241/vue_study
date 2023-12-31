@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p48-52:vue生命周期</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+
+</head>
+
+<body>
+
+
+<div id="demo">
+    <p :style="{opacity:opacity}">website:{{website}}</p>
+    <button @click="stop">停止</button>
+</div>
+<script type="text/javascript">
+
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            website: 'http://www.hu-rong.com',
+            opacity: 1,
+        },
+        methods: {
+            stop() {
+                console.log('stop')
+                this.$destroy()
+                //为什么不在这里停止interval，是因为他有可能因为其它原因停止了，统一放在beforeDestroy管理，以免遗漏
+            }
+        },
+        computed: {},
+        watch: {},
+        filters: {},
+        directives: {},
+        //以下为生命周期勾子方法
+        beforeCreate() {
+            //此时无法通过vm访问到data中的数据，methods中的方法
+            console.log('beforeCreate')
+        },
+        created() {
+            //此时可以通过vm访问到data中的数据，methods中的方法
+            console.log('created')
+        },
+        beforeMount() {
+            /**
+             * 页面呈现的是未经vue编译的dom结构,所有对dom的操作，最终都不起效
+             */
+            console.log('beforeMount')
+        },
+        mounted() {
+            /**
+             * 页面中呈现的是经过vue编译的dom,对dom的操作均有效（尽可能避免）
+             * 至此初始化过程结束，一般在此进行：开启定时器、发送网络请求，订阅消息，绑定自定义事件等
+             */
+            console.log('mounted')
+            this.timer = setInterval(() => {
+                console.log('setInterval')
+                this.opacity -= 0.01
+                if (this.opacity <= 0) this.opacity = 1
+            }, 16)
+        },
+        beforeUpdate() {
+            /**
+             * 此时数据是新的，但页面是旧的
+             */
+            console.log('beforeUpdate')
+        },
+        /**
+         * beforeUpdate与updated之间
+         * 虚拟dom重新渲染与比较
+         * 根据新数据，生成新的虚拟dom,随后与旧的虚拟dom进行比较，最终完成页面更新，即完成了model->view的更新
+         */
+        updated() {
+            /**
+             * 此时数据是新的，页面也是新的
+             */
+            console.log('updated')
+        },
+        beforeDestroy() {
+            /**
+             * 此时，vm中所有的data,methods,指令等，都处于可用状态，马上要执行销毁过程
+             * 一般在此阶段：关闭定时器，取消订阅，解绑自定义事件
+             */
+            console.log('beforeDestroy')
+            clearInterval(this.timer)
+        },
+        destroyed() {
+            console.log('destroyed')
+        }
+    })
+
+</script>
+</body>
+</html>
