@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p38-39:vue收集表单数据及过滤器实例</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/dayjs/1.11.9/dayjs.min.js"></script>
+</head>
+
+<body>
+
+
+<div id="demo">
+    <p>过滤器例子1-默认:现在是{{Date.now()|timeFormat}}</p>
+    <p>过滤器例子2-指定参数:现在是{{Date.now()|timeFormat('YYYY-MM-DD')}}</p>
+    <p>过滤器例子3-可以多个:现在是{{Date.now()|timeFormat|mySlice}}</p>
+    <!--表单触发事件，不在button上提交-->
+    <form @submit.prevent="submit">
+<!--    <form @submit.prevent>-->
+        <!--trim修饰符去掉两边的空格-->
+        <p>帐号:<input type="text" v-model.trim="user.username"></p>
+        <p>密码:<input type="password" v-model.trim="user.password"></p>
+        <p>
+            性别:
+            男<input type="radio" name="sex" value="male" v-model="user.sex">
+            女<input type="radio" name="sex" value="female" v-model="user.sex">
+        </p>
+        <!--type==number指定只能输入数字，修饰符number将输入的字符串转成数字-->
+        <p>年龄:<input type="text" type="number" v-model.number="user.age"> </p>
+        <p>爱好:
+            游戏<input type="checkbox" value="game" v-model="user.hobby">
+            电影<input type="checkbox" value="movie" v-model="user.hobby">
+        </p>
+        <p>城市:
+            <select v-model="user.city">
+                <option value="">请选择</option>
+                <option value="bj">北京</option>
+                <option value="sh">上海</option>
+            </select>
+        </p>
+        <p>
+            简介:
+            <!--修饰符lazy：在失去焦点的时候vue才收集数据-->
+            <textarea v-model.lazy="user.info"></textarea>
+        </p>
+        <p>
+            是否同意协意<input type="checkbox" v-model="user.agree">
+        </p>
+        <!--button上提交事件,不能批量取到表单数据,要自取-->
+<!--        <button @click.prevent="btnSubmit">提交</button>-->
+        <button>提交</button>
+    </form>
+
+</div>
+<script type="text/javascript">
+    //全局过滤器
+    Vue.filter('mySlice',function(value){
+        return value.slice(0,4)
+    });
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            user:{
+                username: '',
+                password: '',
+                sex:'female',
+                hobby:[],//checkbox要用array
+                city:'',
+                age:0,
+                info:'',
+                agree:''
+            }
+        },
+        methods: {
+            submit(){
+                //不般不要用_data，常用的方法是将数据包装一层,如上面的user
+                // console.log(JSON.stringify(this._data))
+                console.log(JSON.stringify(this.user))
+            },
+            btnSubmit(){
+                console.log(this.user.username)
+            }
+        },
+        computed: {},
+        watch: {},
+        filters:{
+            //过滤器:这个是局部过滤器，如果有另一个vm这里的就用不了了
+            timeFormat(value,format='YYYY-MM-DD HH:mm:ss'){
+                //return dayjs(value).format('YYYY-MM-DD HH:mm:ss')
+                return dayjs(value).format(format)
+            },
+        }
+    })
+
+</script>
+</body>
+</html>
