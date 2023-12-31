@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p42:v-cloak解决vue加载完成全的未解析状态</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <style type="text/css">
+        /**
+        需要结合css使用达到效果，当vue.js加载完成后，会将所有的v-cloak指令的对应样式移除
+         */
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<div id="demo">
+    <p v-cloak>{{str}}</p>
+</div>
+<script type="text/javascript">
+
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            str: '当vue.js没加载完成时，页面中的{{str}}将不会解析，但会显示，对用户不友好，如果想在vue.js加载完成全隐藏他们则可以用v-cloak'
+        },
+        methods: {},
+        computed: {},
+        watch: {},
+        filters: {}
+    })
+
+</script>
+</body>
+</html>

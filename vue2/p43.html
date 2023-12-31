@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p43:v-once及v-pre</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+
+</head>
+
+<body>
+
+
+<div id="demo">
+    <p v-once>v-once只在初次动态渲染后就变成静态了：n={{n}}</p>
+    <p>n={{n}}</p>
+    <button @click="n++">n++</button>
+    <hr/>
+    v-pre跳过其所在节点的编译，可利用它跳过没有指令语法、插值语法的节点，加快编译
+    <p v-pre>不会解析了：n={{n}}</p>
+    <p v-pre>不会解析了：{{name}}</p>
+</div>
+<script type="text/javascript">
+
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            n:1,
+            name:'tom'
+        },
+        methods: {},
+        computed: {},
+        watch: {},
+        filters: {}
+    })
+
+</script>
+</body>
+</html>
