@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p33-37:vue数据监测/对像/数据增删改查综合实例</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+
+<body>
+
+
+<div id="demo">
+    <button @click="addAge(35)">添加年龄</button>
+    <button @click="me.age++">年龄++</button>
+    <button @click="addHobby('爬山')">添加一个爱好</button>
+    <button @click="modifyHobby('音乐')">修改爱好:电影->音乐</button>
+    <button @click="reverseHobby">翻转爱好</button>
+    <button @click="addFriend">添加一个朋友汤姆</button>
+    <button @click="modifyFriend">修改朋友汤姆的性别</button>
+    <button @click="sortFriends">朋友按年龄排序</button>
+    <dl>
+        <dt>个人简介</dt>
+        <dd>姓名:{{name}}</dd>
+        <dd v-if="website">主页:{{website}}</dd>
+        <dd v-if="me.age">年龄:{{me.age}}</dd>
+        <dd>
+            <dl>
+                <dt>我的爱好:</dt>
+                <dd v-for="(h,index) in hobbies">
+                    {{h}}
+                </dd>
+            </dl>
+        </dd>
+        <dd>
+            <dl>
+                <dt>我的朋友们:</dt>
+                <dd v-for="(f,index) in friends">
+                    姓名:{{f.name}}-性别:{{f.sex}}-年龄:{{f.age}}
+                </dd>
+            </dl>
+        </dd>
+    </dl>
+
+</div>
+<script type="text/javascript">
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            name: 'hurong',
+            website: 'http://www.hu-rong.com',
+            me: {},
+            hobbies: ['打球', '电影', '游戏'],//数组操作
+            friends: [//数组中的对象操作
+                {name: '李四', sex: '男', age: 39},
+                {name: '王五', sex: '女', age: 42},
+            ],
+        },
+        methods: {
+            addAge(val) {
+                //vm.$set不能直接操作vm或vm.data,只能操作data中对像,下面这种会报错
+                //vm.$set(this.data,'age',val)
+                //vm.$set(this.me,'age',val)
+                //也可以写成
+                Vue.set(this.me, 'age', val)
+            },
+            addHobby(val) {
+                /**
+                 * 对数组的操作只能用如下方法:
+                 * Api:push,pop,shift,unshift,splice,sort,reverse
+                 * Vue.set()或vm.$set()
+                 */
+                this.hobbies.push(val)
+            },
+            modifyHobby(val) {
+                //this.hobbies.splice(1, 1, val)
+                //也可以这样
+                vm.$set(this.hobbies, 1, val)
+            },
+            reverseHobby() {
+                this.hobbies = this.hobbies.reverse()
+            },
+            addFriend() {
+                /**
+                 * 错误示例：
+                 * 这相当于直接赋值，虽然vm._data.friend被修改了
+                 * 但不会产生对像属性对应的get,set方法，vue不会重新渲染页面
+                 */
+                //this.friends[2]='{"name": "汤姆", "sex": "女"}'
+                vm.$set(this.friends, 2, {name: '汤姆', sex: '女', age: 40})
+            },
+            modifyFriend() {
+                this.friends[2].sex = '男'
+            },
+            sortFriends() {
+                this.friends.sort((a, b) => {
+                    return b.age - a.age || a.age - b.age
+                })
+            }
+        },
+        computed: {},
+        watch: {},
+    })
+
+</script>
+</body>
+</html>
