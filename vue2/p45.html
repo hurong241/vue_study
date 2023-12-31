@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p45-47:vue自定义指令</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+
+</head>
+
+<body>
+
+
+<div id="demo">
+    <p>{{website}}</p>
+    <p>原来的n:<span>n={{n}}</span></p>
+    <p>自定义指令-放大10倍:<span v-big="n"></span></p>
+    <p>自定义指令-放大100倍:<span v-big1="n"></span></p>
+    <button @click="n++">n++</button>
+    <hr/>
+    <input type="text" v-focusbind:value="n">
+    <input type="text" v-focusbind1:value="n">
+</div>
+<script type="text/javascript">
+    //全局自定义指令
+    Vue.directive('focusbind1',{
+        //绑定
+        bind(element, binding) {
+            console.log('bind')
+            element.value = binding.value
+        },
+        //指令所在元素被插入页面
+        inserted(element, binding) {
+            console.log('insert')
+            element.focus()
+
+        },
+        //指令所在元素被更新
+        update(element, binding) {
+            console.log('update')
+            element.value = binding.value
+        }
+    });
+    //全局自定义指令-function写法
+    Vue.directive('big1',function(element,binding){
+        console.log('big1被调用')
+        element.innerText = binding.value * 100
+    })
+
+    //创建vue实例
+    const vm = new Vue({
+        el: "#demo",
+        data: {
+            n: 1,
+            website: 'http://www.hu-rong.com'
+        },
+        methods: {},
+        computed: {},
+        watch: {},
+        filters: {},
+        directives: {
+            /**
+             *自定义指令
+             * 指令与元素绑定(bind阶段)或指令所有模板被重新解析时会被调用(update阶段)，如修改website时也会导致big被调用
+             */
+            big(element, binding) {
+                console.log('big被调用')
+                element.innerText = binding.value * 10
+            },
+            // focusbind(element, binding) {
+            //     //绑定自动获得焦点，但这里有个问题，首页绑定时是不会得到焦点的，因为页面上还没有这个元素
+            //     element.value=binding.value
+            //     element.focus()
+            // }
+            //要用完整写法实现这个生命周期的过程
+            focusbind: {
+                //绑定
+                bind(element, binding) {
+                    console.log('bind')
+                    element.value = binding.value
+                },
+                //指令所在元素被插入页面
+                inserted(element, binding) {
+                    console.log('insert')
+                    element.focus()
+
+                },
+                //指令所在元素被更新
+                update(element, binding) {
+                    console.log('update')
+                    element.value = binding.value
+                }
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
