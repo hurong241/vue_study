@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p53-59:vue非单文件组件及组件嵌套</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+
+</head>
+
+<body>
+
+
+<div id="demo">
+    <app></app>
+</div>
+
+<script type="text/javascript">
+    //定义一个学生组件，由于在app组件中用到它，代码要写在app组件前面
+    const student = Vue.extend({
+        //组件名称，这个名称仅是给vue插件中显示用的
+        name: 'xuesheng',
+        //组件模板
+        template: `
+          <div>
+          <dl>
+            <dt>学生信息</dt>
+            <dd v-for="(s,index) in students" :index="s.id">
+              {{ s.id }}-{{ s.name }}-{{ s.sex }}-{{ s.age }}
+              <button @click="showId(s.id)">弹出id</button>
+            </dd>
+          </dl>
+          </div>
+        `,
+        //组件数据
+        data() {
+            return {
+                students: [//数组中的对象操作
+                    {id: 1, name: '李四', sex: '男', age: 39},
+                    {id: 2, name: '王五', sex: '女', age: 42},
+                ]
+            }
+        },
+        //组件方法
+        methods: {
+            showId(value) {
+                alert(value)
+            }
+        }
+    })
+
+    //定义一个
+
+    //定义一个描述组件，由于它被嵌套在app组件中，代码必须写在app前面
+    const miaoShu = Vue.extend({
+        name: 'description',//这个name是在vue开发者工具中显示的名称，页面上用到的还是const后面那个名称
+        template: `
+          <div>
+          {{ info }}
+          <hr/>
+          </div>
+        `,
+        //组件中的data必须写成function的形式
+        data() {
+            return {'info': '多组件仅用于学习，一般开发中都是用的单组件'}
+        }
+    })
+    /**
+     * 组件与vm的区别仅在于他不能定义el,其它都一样
+     * app组件中嵌套了其它组件，则其它组件的代码必须写在这个组件的前面
+     */
+    const app = Vue.extend({
+        template: `
+          <div>
+          <miaoshu></miaoshu>
+          <student></student>
+          </div>
+        `,
+        components: {
+            'Miaoshu':miaoShu,
+            student//简写形式
+        }
+    })
+
+    const vm = new Vue({
+        el: "#demo",
+        //用到的组件
+        // components:{
+        //     'app':app,//一般开发中定义一个root层的组件，且于管理其下层组件
+        // },
+        //由于这里只用到一个app组件，可以简写成
+        components: {app}
+    })
+
+</script>
+</body>
+</html>
