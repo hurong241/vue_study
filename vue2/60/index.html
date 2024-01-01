@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p60:vue单组件</title>
+</head>
+<body>
+<div>
+    这是一个vue单组件的例子，包括5个文件：index.html,main.js,以及三个组件App.vue,School.vue,Student.vue<br/>
+    在App.vue中用到School.vue和Student.vue两个组件<br/>
+    当这些工作准备完成后，并不能直接解析成功，需要安装vue脚手架(vue-cli)<br/>
+    安装脚手架前需要先安装npm,它需要先安装node.js,安装参考<a href="https://zhuanlan.zhihu.com/p/661984718" target="_blank">安装npm</a><br/>
+    vue-cli网址:<a href="https://cli.vuejs.org/zh/" target="_blank">https://cli.vuejs.org/zh/</a><br/>
+</div>
+<!--注意这里文件的顺序，防止文件未加载完成导致的问题-->
+<div id="demo">
+    <App></App>
+</div>
+<!--js要放在dom节点后面-->
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="./main.js"></script>
+</body>
+</html>
