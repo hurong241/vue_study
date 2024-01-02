@@ -30,6 +30,7 @@ export default {
   },
   methods: {
     show() {
+      //功能类似于document.getElementById
       console.log(this.$refs.name)
       console.log(this.$refs.student)
     }
