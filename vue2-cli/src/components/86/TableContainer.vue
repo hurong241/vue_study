@@ -57,6 +57,12 @@ export default {
         return !todo.done
       })
     },
+    //行内编辑
+    updateTodo(id,title){
+      this.todos.forEach((todo)=>{
+        if(todo.id===id) todo.title=title
+      })
+    }
   },
   watch: {
     //在这里统一深度监视todos变化，只要变化就重新存储
@@ -75,6 +81,7 @@ export default {
     this.$bus.$on('deleteTodo', this.deleteTodo)
     this.$bus.$on('checkAll', this.checkAll)
     this.$bus.$on('clearAllChecked', this.clearAllChecked)
+    this.$bus.$on('updateTodo', this.updateTodo)
     //发布订阅方式监听一个消息
     this.pubsubTestId=pubsub.subscribe('pubsub-test', (msgName, data)=>{
       alert('pubsub:收到消息,消息名:'+msgName+','+'数据:'+data)
@@ -82,7 +89,7 @@ export default {
   },
   beforeDestroy() {
     //解绑全局事件
-    this.$bus.off(['addTodo', 'checkTodo', 'deleteTodo', 'checkAll', 'clearAllChecked'])
+    this.$bus.off(['addTodo', 'checkTodo', 'deleteTodo', 'checkAll', 'clearAllChecked','updateTodo'])
     //取消订阅
     pubsub.unsubscribe(this.pubsubTestId)
   }
