@@ -1,7 +1,7 @@
 //引入Vue
 import Vue from 'vue'
 //引入组件
-import App from './App70.vue'
+import App from './App80.vue'
 //引入插件
 import plugins from './plugins'
 //关闭生产提示
