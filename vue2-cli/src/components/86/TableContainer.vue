@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import pubsub from 'pubsub-js'
 import TableTop from "@/components/86/TableTop";
 import TableList from "@/components/86/TableList";
 import TableFoot from "@/components/86/TableFoot";
@@ -21,7 +22,7 @@ export default {
   },
   data() {
     return {
-      todos: JSON.parse(localStorage.getItem('todos')) || []//从存储中取数据,无则返回空数组
+      todos: JSON.parse(localStorage.getItem('todos')) || [],//从存储中取数据,无则返回空数组
     };
   },
   methods: {
@@ -55,7 +56,7 @@ export default {
       this.todos = this.todos.filter((todo) => {
         return !todo.done
       })
-    }
+    },
   },
   watch: {
     //在这里统一深度监视todos变化，只要变化就重新存储
@@ -74,10 +75,16 @@ export default {
     this.$bus.$on('deleteTodo', this.deleteTodo)
     this.$bus.$on('checkAll', this.checkAll)
     this.$bus.$on('clearAllChecked', this.clearAllChecked)
+    //发布订阅方式监听一个消息
+    this.pubsubTestId=pubsub.subscribe('pubsub-test', (msgName, data)=>{
+      alert('pubsub:收到消息,消息名:'+msgName+','+'数据:'+data)
+    })
   },
   beforeDestroy() {
     //解绑全局事件
     this.$bus.off(['addTodo', 'checkTodo', 'deleteTodo', 'checkAll', 'clearAllChecked'])
+    //取消订阅
+    pubsub.unsubscribe(this.pubsubTestId)
   }
 }
 </script>

@@ -1,11 +1,13 @@
 <template>
   <div v-show="total">
-    <input type="checkbox" :checked="isAll" @change="checkAllItems">已选<span>0</span>/全部<span>{{ total }}</span>
+    <input type="checkbox" :checked="isAll" @change="checkAllItems">已选<span>{{doneTotal}}</span>/全部<span>{{ total }}</span>
     <button @click="clearAll">删除所有勾选</button>
+    <button @click="pubSubTest">发布订阅方式向外层传勾选数量</button>
   </div>
 </template>
 
 <script>
+import pubsub from 'pubsub-js'
 export default {
   name: 'table-foot',
   props: [
@@ -36,6 +38,10 @@ export default {
     //清除
     clearAll() {
       this.$bus.$emit('clearAllChecked')
+    },
+    //发布订阅方式发送消息
+    pubSubTest(){
+      pubsub.publish('pubsub-test','total:'+this.total)
     }
   }
 }
