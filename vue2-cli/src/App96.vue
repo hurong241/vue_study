@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    p96:vue-axios安装及代理服务器配置<br/>
+    p96-100:vue-axios安装及代理服务器配置<br/>
     安装:npm i axios<br/>
     vue-cli中用代理服务器实现跨域原理：当我们启动vue-cli后，访问localhost:8080展示首页<br/>
     本例中点击按钮发送http请求访问一个接口如：(http://api.hu-rong.com/about)<br/>
